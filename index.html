@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SANDIRA GAME</title>
+<style>
+body{margin:0;background:#111;color:#fff;font-family:sans-serif;text-align:center;overflow:hidden}
+h1{margin:10px;color:#ffcc00;font-size:28px}
+#score{font-size:22px;margin:5px}
+canvas{background:#222;border:3px solid #ffcc00;border-radius:15px;display:block;margin:10px auto}
+button{background:#ffcc00;border:none;padding:15px 30px;font-size:20px;border-radius:10px;font-weight:bold;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>🔥 SANDIRA GAME 🔥</h1>
+<div id="score">النقاط: 0 | الحياة: 3</div>
+<canvas id="game" width="350" height="450"></canvas>
+<br>
+<button onclick="start()">إبدأ اللعب ▶</button>
+<p>حرك بصباعك يمين و يسار و جمع النجوم ⭐</p>
+<script>
+let c=document.getElementById("game"),x=c.getContext("2d");
+let px=150,score=0,lives=3,stars=[],playing=false;
+function start(){score=0;lives=3;stars=[];playing=true;document.getElementById("score").innerText="النقاط: 0 | الحياة: 3";}
+c.addEventListener("touchmove",e=>{px=e.touches[0].clientX-c.getBoundingClientRect().left-25});
+c.addEventListener("mousemove",e=>{px=e.clientX-c.getBoundingClientRect().left-25});
+function loop(){
+x.clearRect(0,0,350,450);
+x.fillStyle="#ffcc00";x.fillRect(px,400,50,30);
+x.fillStyle="#fff";x.font="20px Arial";x.fillText("😎",px+10,425);
+if(playing && Math.random()<0.05) stars.push({x:Math.random()*320,y:0});
+for(let s of stars){s.y+=4;x.font="25px Arial";x.fillText("⭐",s.x,s.y);
+if(s.y>390 && s.x>px-20 && s.x<px+60){score+=10;s.y=999;document.getElementById("score").innerText="النقاط: "+score+" | الحياة: "+lives;}
+if(s.y>450){lives--;s.y=999;document.getElementById("score").innerText="النقاط: "+score+" | الحياة: "+lives;if(lives<=0){playing=false;alert("سالا اللعب! نقاطك: "+score);}}}
+stars=stars.filter(s=>s.y<500);
+requestAnimationFrame(loop);} loop();
+</script>
+</body>
+</html>
